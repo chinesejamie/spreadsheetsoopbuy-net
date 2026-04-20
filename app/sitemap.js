@@ -4,7 +4,7 @@ import { generateSlug } from '@/lib/slugify';
 import { getAllArticles } from '@/lib/articles';
 
 export default async function sitemap() {
-  const baseUrl = 'https://cnfansportal.com';
+  const baseUrl = 'https://spreadsheetsoopbuy.net';
 
   try {
     await connectDB();
@@ -15,35 +15,45 @@ export default async function sitemap() {
       .lean()
       .limit(50000); // Sitemap limit
 
+    // Individual product pages - priority 0.7 (lower than guides)
     const productUrls = products.map((product) => ({
       url: `${baseUrl}/product/${generateSlug(product.name, product._id)}`,
       lastModified: product.updatedAt || new Date(),
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 0.7,
     }));
 
-    // Blog articles
+    // Blog articles - priority 0.8
     const articles = getAllArticles();
     const blogUrls = articles.map((article) => ({
       url: `${baseUrl}/blog/${article.slug}`,
       lastModified: new Date(article.date),
       changeFrequency: 'weekly',
-      priority: 0.9,
+      priority: 0.8,
     }));
 
-    // Static pages
+    // Static pages with priority hierarchy
     const staticPages = [
+      // Homepage - highest priority (informational hub)
       {
         url: baseUrl,
         lastModified: new Date(),
         changeFrequency: 'daily',
-        priority: 1,
+        priority: 1.0,
       },
+      // Blog index - high priority
       {
         url: `${baseUrl}/blog`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
-        priority: 0.9,
+        priority: 0.8,
+      },
+      // Spreadsheet page - high priority (but below homepage)
+      {
+        url: `${baseUrl}/oopbuy-spreadsheet`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
       },
     ];
 
@@ -56,7 +66,7 @@ export default async function sitemap() {
         url: baseUrl,
         lastModified: new Date(),
         changeFrequency: 'daily',
-        priority: 1,
+        priority: 1.0,
       },
     ];
   }

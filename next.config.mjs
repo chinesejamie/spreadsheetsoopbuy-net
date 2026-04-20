@@ -2,6 +2,20 @@
 const nextConfig = {
   images: {
     remotePatterns: [
+      // API server for images
+      {
+        protocol: 'http',
+        hostname: '217.154.115.9',
+        port: '4501',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '217.154.115.9',
+        port: '4501',
+        pathname: '/assets/**',
+      },
+      // Chinese CDNs
       {
         protocol: 'https',
         hostname: '**.alicdn.com',
@@ -18,26 +32,33 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      // Allow any HTTP/HTTPS for flexibility
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // Reduce memory issues during development
     minimumCacheTTL: 60,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
-  // Reduce memory pressure during development
   experimental: {
-    // Disable memory cache in dev to reduce malloc errors
     isrMemoryCacheSize: 0,
   },
   async rewrites() {
     return [
-      { source: '/uploads/:path*', destination: 'http://localhost:4501/uploads/:path*' },
-      { source: '/assets/profilePicture/:path*', destination: 'http://localhost:4200/assets/profilePicture/:path*' },
-      { source: '/assets/productImages/:path*', destination: 'http://localhost:4200/assets/productImages/:path*' },
-      { source: '/assets/images/:path*', destination: 'http://localhost:4200/assets/images/:path*' },
+      // Images from API server at 217.154.115.9:4501
+      { source: '/uploads/:path*', destination: 'http://217.154.115.9:4501/uploads/:path*' },
+      { source: '/assets/images/:path*', destination: 'http://217.154.115.9:4501/assets/images/:path*' },
+      { source: '/assets/productImages/:path*', destination: 'http://217.154.115.9:4501/assets/productImages/:path*' },
+      { source: '/assets/profilePicture/:path*', destination: 'http://217.154.115.9:4501/assets/profilePicture/:path*' },
     ];
   },
 };

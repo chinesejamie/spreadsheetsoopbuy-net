@@ -53,8 +53,8 @@ export async function GET(request) {
     ? await Product.countDocuments(mongoQuery)
     : exactCount;
 
-  // 4) Page ID for Boosts - UPDATED TO NEW PAGE ID
-  const pageId = '692d53b66be92af615b19149';
+  // 4) Page IDs for Boosts
+  const pageIds = ['694a5a96812c23807cdc523b'];
 
   // 5) Aggregation Pipeline
   const pipeline = [
@@ -70,7 +70,7 @@ export async function GET(request) {
                   as: 'b',
                   cond: {
                     $and: [
-                      { $eq: ['$$b.boostPage', pageId] },
+                      { $in: ['$$b.boostPage', pageIds] },
                       { $gt: ['$$b.validUntil', now] }
                     ]
                   }
@@ -86,8 +86,6 @@ export async function GET(request) {
     {
       $sort: {
         totalBoostForPage: -1,
-        purchased: -1,
-        viewCount: -1,
         _id: -1
       }
     },

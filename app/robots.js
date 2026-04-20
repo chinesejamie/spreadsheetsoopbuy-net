@@ -7,6 +7,6 @@ export default function robots() {
         disallow: ['/api/', '/admin/'],
       },
     ],
-    sitemap: 'https://cnfansportal.com/sitemap.xml',
+    sitemap: 'https://spreadsheetsoopbuy.net/sitemap.xml',
   };
 }
